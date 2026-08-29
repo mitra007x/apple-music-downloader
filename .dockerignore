@@ -1,7 +1,10 @@
 *
-!/config.yaml.example
+!/Dockerfile
+!/config.yaml
 !/go.mod
 !/go.sum
 !/main.go
 !/utils/
 !/utils/**
+!/bot/
+!/bot/**
