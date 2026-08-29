@@ -1,23 +1,24 @@
 import os
 
 # --- Configuration ---
-BOT_TOKEN = "8891762925:AAG7fXZ1m9WVa72pY78NRyx0UZLNXoVv-a8" # INPUT YOUR BOT TOKEN
-ADMIN_ID = 731336143
-USER_REQUEST_LIMIT = 2
-GOFILE_TOKEN = "wxWEuqKbUj1mZ2PTJMr49Ec03WrgwevV"
-DUMP_CHANNEL_ID = "@mudump7"
+# Pulling credentials securely from Dokploy Environment Variables
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+ADMIN_ID = int(os.getenv("ADMIN_ID", "731336143")) # Defaults to your ID if not set
+USER_REQUEST_LIMIT = int(os.getenv("USER_REQUEST_LIMIT", "2"))
+GOFILE_TOKEN = os.getenv("GOFILE_TOKEN")
+DUMP_CHANNEL_ID = os.getenv("DUMP_CHANNEL_ID")
 
 # --- User Limits ---
 MAX_PLAYLIST_TRACKS = 100
 BLOCK_ARTIST_LINKS = True
 
 # Pyrogram Config
-API_ID = 28442919
-API_HASH = "e881fe0b8d9ae8eeec10d9457e8e23e1"
+API_ID = int(os.getenv("API_ID", "0"))
+API_HASH = os.getenv("API_HASH")
 SESSION_NAME = "amdl_pyrogram_session"
 
 # Directory Setup
-BASE_DIR = os.path.expanduser('~/mitra/amdl/downloader')
+BASE_DIR = os.path.expanduser('~/amdl/downloader')
 DOWN_DIR = os.path.join(BASE_DIR, 'down')
 STAGE_BASE_DIR = os.path.join(BASE_DIR, 'stage')
 ZIP_DIR = os.path.join(BASE_DIR, 'zips')
