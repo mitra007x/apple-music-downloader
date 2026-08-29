@@ -15,8 +15,11 @@ RUN wget https://www.bok.net/Bento4/binaries/Bento4-SDK-1-6-0-640.x86_64-unknown
 # Match the BASE_DIR hardcoded in your bot/config.py
 WORKDIR /root/amdl/downloader
 
-# Copy the entire repository
+# Copy the entire repository into the container
 COPY . .
+
+# Explicitly tell Python where the root of your project is so it finds the 'bot' module
+ENV PYTHONPATH="/root/amdl/downloader"
 
 # Install the required Python packages
 RUN pip install --no-cache-dir \
@@ -31,5 +34,5 @@ RUN pip install --no-cache-dir \
 # Download Go modules
 RUN if [ -f "go.mod" ]; then go mod download; fi
 
-# Execute the bot as a module from the root directory
+# Execute the bot as a module
 CMD ["python", "-m", "bot.main"]
