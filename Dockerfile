@@ -33,7 +33,8 @@ RUN pip install --no-cache-dir \
     certifi \
     requests \
     html_telegraph_poster \
-    python-telegram-bot
+    python-telegram-bot \
+    lxml_html_clean
 
 RUN if [ -f "go.mod" ]; then go mod download; fi
 
