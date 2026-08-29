@@ -27,7 +27,7 @@ async def upload_to_gofile_curl(file_path: str, dl_id: str, user_cancelled: asyn
         _monitor_upload_progress(upload_progress, stop_monitor, dl_id)
     )
 
-    upload_url = "https://upload-ap-sgp.gofile.io/uploadFile"
+    upload_url = "https://upload.gofile.io/uploadFile"
 
     try:
         async def file_sender():
