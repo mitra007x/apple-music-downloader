@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/beevik/etree"
-	"main/utils/httputil"
 )
 
 type SongLyrics struct {
@@ -28,9 +27,61 @@ type SongLyrics struct {
 	} `json:"data"`
 }
 
+// Added: Struct to parse the user's storefront response
+type StorefrontResponse struct {
+	Data []struct {
+		Id string `json:"id"`
+	} `json:"data"`
+}
+
+// Added: Function to dynamically fetch the account's true region using the token
+func getUserStorefront(token string, userToken string) (string, error) {
+	req, err := http.NewRequest("GET", "https://amp-api.music.apple.com/v1/me/storefront", nil)
+	if err != nil {
+		return "", err
+	}
+	req.Header.Set("Origin", "https://music.apple.com")
+	req.Header.Set("Referer", "https://music.apple.com/")
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
+	cookie := http.Cookie{Name: "media-user-token", Value: userToken}
+	req.AddCookie(&cookie)
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("failed to get storefront, HTTP status: %d", resp.StatusCode)
+	}
+
+	var obj StorefrontResponse
+	if err := json.NewDecoder(resp.Body).Decode(&obj); err != nil {
+		return "", err
+	}
+
+	if len(obj.Data) > 0 && obj.Data[0].Id != "" {
+		return obj.Data[0].Id, nil // Returns "us", "in", "jp", etc. dynamically
+	}
+
+	return "", errors.New("storefront not found in account response")
+}
+
 func Get(storefront, songId, lrcType, language, lrcFormat, token, mediaUserToken string) (string, error) {
 	if len(mediaUserToken) < 50 {
 		return "", errors.New("MediaUserToken not set")
+	}
+
+	// NEW LOGIC: Fetch the actual storefront from the token
+	// If successful, override the storefront passed from the URL
+	actualStorefront, err := getUserStorefront(token, mediaUserToken)
+	if err == nil && actualStorefront != "" {
+		storefront = actualStorefront
+	} else {
+		// If it fails for some reason, we print a warning and fallback to the URL's storefront
+		fmt.Printf("Warning: Could not fetch user actual storefront: %v\n", err)
 	}
 
 	ttml, err := getSongLyrics(songId, storefront, token, mediaUserToken, lrcType, language)
@@ -61,7 +112,7 @@ func getSongLyrics(songId string, storefront string, token string, userToken str
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
 	cookie := http.Cookie{Name: "media-user-token", Value: userToken}
 	req.AddCookie(&cookie)
-	do, err := httputil.Client.Do(req)
+	do, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return "", err
 	}
@@ -81,27 +132,27 @@ func getSongLyrics(songId string, storefront string, token string, userToken str
 // Use for detect if lyrics have CJK, will be replaced by transliteration if exist.
 func containsCJK(s string) bool {
 	for _, r := range s {
-		if (r >= 0x1100 && r <= 0x11FF)    || // Hangul Jamo
-			(r >= 0x2E80 && r <= 0x2EFF)   || // CJK Radicals Supplement
-			(r >= 0x2F00 && r <= 0x2FDF)   || // Kangxi Radicals
-			(r >= 0x2FF0 && r <= 0x2FFF)   || // Ideographic Description Characters
-			(r >= 0x3000 && r <= 0x303F)   || // CJK Symbols and Punctuation
-			(r >= 0x3040 && r <= 0x309F)   || // Hiragana
-			(r >= 0x30A0 && r <= 0x30FF)   || // Katakana
-			(r >= 0x3130 && r <= 0x318F)   || // Hangul Compatibility Jamo
-			(r >= 0x31C0 && r <= 0x31EF)   || // CJK Strokes
-			(r >= 0x31F0 && r <= 0x31FF)   || // Katakana Phonetic Extensions
-			(r >= 0x3200 && r <= 0x32FF)   || // Enclosed CJK Letters and Months
-			(r >= 0x3300 && r <= 0x33FF)   || // CJK Compatibility
-			(r >= 0x3400 && r <= 0x4DBF)   || // CJK Unified Ideographs Extension A
-			(r >= 0x4E00 && r <= 0x9FFF)   || // CJK Unified Ideographs
-			(r >= 0xA960 && r <= 0xA97F)   || // Hangul Jamo Extended-A
-			(r >= 0xAC00 && r <= 0xD7AF)   || // Hangul Syllables
-			(r >= 0xD7B0 && r <= 0xD7FF)   || // Hangul Jamo Extended-B
-			(r >= 0xF900 && r <= 0xFAFF)   || // CJK Compatibility Ideographs
-			(r >= 0xFE30 && r <= 0xFE4F)   || // CJK Compatibility Forms
-			(r >= 0xFF65 && r <= 0xFF9F)   || // Halfwidth Katakana
-			(r >= 0xFFA0 && r <= 0xFFDC)   || // Halfwidth Jamo
+		if (r >= 0x1100 && r <= 0x11FF) || // Hangul Jamo
+			(r >= 0x2E80 && r <= 0x2EFF) || // CJK Radicals Supplement
+			(r >= 0x2F00 && r <= 0x2FDF) || // Kangxi Radicals
+			(r >= 0x2FF0 && r <= 0x2FFF) || // Ideographic Description Characters
+			(r >= 0x3000 && r <= 0x303F) || // CJK Symbols and Punctuation
+			(r >= 0x3040 && r <= 0x309F) || // Hiragana
+			(r >= 0x30A0 && r <= 0x30FF) || // Katakana
+			(r >= 0x3130 && r <= 0x318F) || // Hangul Compatibility Jamo
+			(r >= 0x31C0 && r <= 0x31EF) || // CJK Strokes
+			(r >= 0x31F0 && r <= 0x31FF) || // Katakana Phonetic Extensions
+			(r >= 0x3200 && r <= 0x32FF) || // Enclosed CJK Letters and Months
+			(r >= 0x3300 && r <= 0x33FF) || // CJK Compatibility
+			(r >= 0x3400 && r <= 0x4DBF) || // CJK Unified Ideographs Extension A
+			(r >= 0x4E00 && r <= 0x9FFF) || // CJK Unified Ideographs
+			(r >= 0xA960 && r <= 0xA97F) || // Hangul Jamo Extended-A
+			(r >= 0xAC00 && r <= 0xD7AF) || // Hangul Syllables
+			(r >= 0xD7B0 && r <= 0xD7FF) || // Hangul Jamo Extended-B
+			(r >= 0xF900 && r <= 0xFAFF) || // CJK Compatibility Ideographs
+			(r >= 0xFE30 && r <= 0xFE4F) || // CJK Compatibility Forms
+			(r >= 0xFF65 && r <= 0xFF9F) || // Halfwidth Katakana
+			(r >= 0xFFA0 && r <= 0xFFDC) || // Halfwidth Jamo
 			(r >= 0x1AFF0 && r <= 0x1AFFF) || // Kana Extended-B
 			(r >= 0x1B000 && r <= 0x1B0FF) || // Kana Supplement
 			(r >= 0x1B100 && r <= 0x1B12F) || // Kana Extended-A
@@ -115,7 +166,7 @@ func containsCJK(s string) bool {
 			(r >= 0x2EBF0 && r <= 0x2EE5F) || // CJK Unified Ideographs Extension I
 			(r >= 0x2F800 && r <= 0x2FA1F) || // CJK Compatibility Ideographs Supplement
 			(r >= 0x30000 && r <= 0x3134F) || // CJK Unified Ideographs Extension G
-			(r >= 0x31350 && r <= 0x323AF) {  // CJK Unified Ideographs Extension H
+			(r >= 0x31350 && r <= 0x323AF) { // CJK Unified Ideographs Extension H
 			return true
 		}
 	}
@@ -286,12 +337,12 @@ func conventSyllableTTMLToLRC(ttml string) (string, error) {
 	}
 	divs := parsedTTML.FindElement("tt").FindElement("body").FindElements("div")
 	for _, div := range divs {
-		for _, item := range div.ChildElements() {     //LINES
+		for _, item := range div.ChildElements() { //LINES
 			var lrcSyllables []string
 			var i int = 0
 			var endTime, translitLine, transLine string
-			for _, lyrics := range item.Child {    //WORDS
-				if _, ok := lyrics.(*etree.CharData); ok {   //是否为span之间的空格
+			for _, lyrics := range item.Child { //WORDS
+				if _, ok := lyrics.(*etree.CharData); ok { //是否为span之间的空格
 					if i > 0 {
 						lrcSyllables = append(lrcSyllables, " ")
 						continue
