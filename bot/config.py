@@ -3,8 +3,8 @@ import os
 # --- Configuration ---
 # Pulling credentials securely from Dokploy Environment Variables
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-ADMIN_ID = int(os.getenv("ADMIN_ID", "731336143")) # Defaults to your ID if not set
-USER_REQUEST_LIMIT = int(os.getenv("USER_REQUEST_LIMIT", "2"))
+ADMIN_ID = int(os.getenv("ADMIN_ID")) # Defaults to your ID if not set
+USER_REQUEST_LIMIT = int(os.getenv("USER_REQUEST_LIMIT"))
 GOFILE_TOKEN = os.getenv("GOFILE_TOKEN")
 DUMP_CHANNEL_ID = os.getenv("DUMP_CHANNEL_ID")
 
