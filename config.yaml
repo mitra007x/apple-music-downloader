@@ -18,8 +18,8 @@ atmos-save-folder: down
 aac-save-folder: down
 mv-save-folder: down
 max-memory-limit: 256 # MB
-decrypt-m3u8-port: "172.17.0.1:10020"
-get-m3u8-port: "172.17.0.1:20020"
+decrypt-m3u8-port: "wrapper2-app:10020"
+get-m3u8-port: "wrapper2-app:20020"
 get-m3u8-from-device: true
 
 # set to 'true' to exit on error instead of requiring manual intervention. (for using this program in scripts)
