@@ -17,7 +17,7 @@ COPY . .
 ENV PYTHONPATH="/root/amdl/downloader"
 
 RUN pip install --no-cache-dir \
-    pyrogram \
+    kurigram \
     tgcrypto \
     mutagen \
     aiohttp \
