@@ -8,3 +8,5 @@
 !/utils/**
 !/bot/
 !/bot/**
+!/config/
+!/config/**
