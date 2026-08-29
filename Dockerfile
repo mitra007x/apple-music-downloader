@@ -1,7 +1,8 @@
 FROM python:3.11-slim
 
+# Added gpac here to install MP4Box natively
 RUN apt-get update && \
-    apt-get install -y golang ffmpeg mediainfo wget unzip git ca-certificates && \
+    apt-get install -y golang ffmpeg mediainfo gpac wget unzip git ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
 RUN wget https://www.bok.net/Bento4/binaries/Bento4-SDK-1-6-0-640.x86_64-unknown-linux.zip && \
