@@ -399,7 +399,7 @@ async def download_worker(bot, pyro_app: Client, dl_id: str, slot_number: int):
                 monitor_task = asyncio.create_task(monitor_zip_file(z_path, batch_size, dl_id, zip_monitor_done, part_num=i+1 if len(file_batches)>1 else None))
                 
                 def create_zip(target_path, files_to_zip, cancel_event):
-                    with zipfile.ZipFile(target_path, 'w', zipfile.ZIP_DEFLATED) as z:
+                    with zipfile.ZipFile(target_path, 'w', zipfile.ZIP_STORED) as z:
                         for f in files_to_zip:
                             if cancel_event.is_set():
                                 raise Exception("Cancelled by user.")
