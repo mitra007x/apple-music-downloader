@@ -1,0 +1,8 @@
+requests
+mutagen
+html-telegraph-poster
+lxml_html_clean
+python-telegram-bot>=20.0
+wzgram
+TgCrypto
+aiohttp
