@@ -10,7 +10,7 @@ general:
   proxy: ""                               # HTTP/SOCKS5 proxy (e.g. "http://127.0.0.1:7890", "socks5://127.0.0.1:1080")
   storefront: "us"                        # Storefront country code; used only for search or missing URL storefront
   authorization-token: ""                 # Bearer token for Apple Music API (leave blank to auto-fetch)
-  exit-on-error: false                    # Set true to exit on download errors instead of prompting interactively
+  exit-on-error: true                    # Set true to exit on download errors instead of prompting interactively
 
 # ------------------------------------------------------------------------------
 # 2. Media Quality & Stream Settings (Audio & Video)
