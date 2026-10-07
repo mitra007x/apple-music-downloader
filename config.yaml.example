@@ -2,7 +2,7 @@
 # 1. General Settings (Account, Network & System)
 # ------------------------------------------------------------------------------
 general:
-  lite-server: "http://127.0.0.1:12340"   # wrapper-lite HTTP API endpoint (/m3u8, /key, /lyrics, etc.)
+  lite-server: "wrapper-lite-app:12340"   # wrapper-lite HTTP API endpoint (/m3u8, /key, /lyrics, etc.)
   media-user-token: ""                    # Media user token for Station downloads
   # Supported storefront languages: https://gist.github.com/itouakirai/c8ba9df9dc65bd300094103b058731d0
   language: ""                            # Storefront language code (e.g. "en-US", "ja", "zh-Hans-CN")
@@ -31,10 +31,10 @@ media:
 # 3. Storage Paths & Templates (Save Folders & Naming Templates)
 # ------------------------------------------------------------------------------
 paths:
-  alac: "AM-Lossless"                     # Save folder for ALAC (Lossless / Hi-Res) downloads
-  atmos: "AM-Atmos"                       # Save folder for Dolby Atmos (Spatial Audio) downloads
-  aac: "AM-AAC"                           # Save folder for AAC downloads
-  mv: "AM-MV"                             # Save folder for Music Videos
+  alac: "down"                     # Save folder for ALAC (Lossless / Hi-Res) downloads
+  atmos: "down"                       # Save folder for Dolby Atmos (Spatial Audio) downloads
+  aac: "down"                           # Save folder for AAC downloads
+  mv: "down"                             # Save folder for Music Videos
 
   # Variables: {AlbumId}, {AlbumName}, {ArtistName}, {ReleaseDate}, {ReleaseYear}, {UPC}, {Copyright}, {Quality}, {Codec}, {Tag}, {RecordLabel}
   album-folder: "{AlbumName}"
@@ -60,7 +60,7 @@ metadata:
   lyrics:
     save-file: false                      # Save .lrc file to disk
     embed: true                           # Embed lyrics directly into audio container tags
-    type: "lyrics"                        # Lyrics type: "lyrics" (standard line-by-line) or "syllable-lyrics" (word-by-word)
+    type: "syllable-lyrics"                        # Lyrics type: "lyrics" (standard line-by-line) or "syllable-lyrics" (word-by-word)
     format: "lrc"                         # Lyrics file format: "lrc" or "ttml"
     extra: ""                             # Additional lyric options: "translation" or "pronunciation" (when available)
 
