@@ -12,7 +12,7 @@ FROM python:3.11-slim
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends ffmpeg mediainfo gcc g++ && \
+    apt-get install -y --no-install-recommends ffmpeg mediainfo && \
     rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /bin/apple-music-dl /usr/local/bin/apple-music-dl
