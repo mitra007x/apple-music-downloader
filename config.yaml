@@ -20,7 +20,7 @@ aac-save-folder: down
 mv-save-folder: down
 max-memory-limit: 256 # MB
 # wrapper-lite HTTP API endpoint (provides /m3u8 /key /lyrics /webplayback /license /status)
-lite-server: "http://127.0.0.1:12340"
+lite-server: "wrapper-lite-app:12340"
 
 # Multiple wrapper-lite instances for parallel track downloads.
 # When this list is set, each instance handles one track at a time concurrently.
