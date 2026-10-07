@@ -2,7 +2,7 @@
 # 1. General Settings (Account, Network & System)
 # ------------------------------------------------------------------------------
 general:
-  lite-server: "wrapper-lite-app:12340"   # wrapper-lite HTTP API endpoint (/m3u8, /key, /lyrics, etc.)
+  lite-server: "http://wrapper-lite-app:12340"   # wrapper-lite HTTP API endpoint (/m3u8, /key, /lyrics, etc.)
   media-user-token: ""                    # Media user token for Station downloads
   # Supported storefront languages: https://gist.github.com/itouakirai/c8ba9df9dc65bd300094103b058731d0
   language: ""                            # Storefront language code (e.g. "en-US", "ja", "zh-Hans-CN")
